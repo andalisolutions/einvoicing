@@ -1,5 +1,5 @@
 {
-    "name": "josemmo/einvoicing",
+    "name": "andalisolutions/einvoicing",
     "description": "Library for reading and creating European-compliant electronic invoices (EN 16931)",
     "keywords": [
         "invoicing",
@@ -9,12 +9,12 @@
         "cii"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/josemmo/einvoicing",
+    "homepage": "https://github.com/andalisolutions/einvoicing",
     "authors": [
         {
-            "name": "José Miguel Moreno",
-            "email": "josemmo@pm.me",
-            "homepage": "https://github.com/josemmo"
+            "name": "Andrei Ciungulete",
+            "email": "andrei.ciungulete@andali.ro",
+            "homepage": "https://github.com/ciungulete"
         }
     ],
     "autoload": {
