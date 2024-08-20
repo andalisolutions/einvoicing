@@ -303,8 +303,8 @@ class InvoiceLine {
             return null;
         }
 
-        if ($this->baseQuantity === 0) {
-            return $this->price * $this->quantity;
+        if ($this->baseQuantity == 0) {
+            return $this->price * $this->baseQuantity;
         }
 
         return ($this->price / $this->baseQuantity) * $this->quantity;
