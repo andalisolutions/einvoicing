@@ -349,7 +349,7 @@ class InvoiceLine {
         if ($netAmount === null) {
             return null;
         }
-        $netAmount -= $this->getAllowancesAmount();
+        $netAmount += $this->getAllowancesAmount();
         $netAmount += $this->getChargesAmount();
         return $netAmount;
     }
