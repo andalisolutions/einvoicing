@@ -10,6 +10,7 @@ use Einvoicing\Identifier;
 use Einvoicing\Invoice;
 use Einvoicing\InvoiceLine;
 use Einvoicing\InvoiceReference;
+use Einvoicing\Models\InvoiceStaticTotals;
 use Einvoicing\Party;
 use Einvoicing\Payments\Card;
 use Einvoicing\Payments\Mandate;
@@ -244,6 +245,8 @@ class UblReader extends AbstractReader {
         foreach ($xml->getAll("{{$cac}}InvoiceLine | {{$cac}}CreditNoteLine") as $node) {
             $invoice->addLine($this->parseInvoiceLine($node, $taxExemptions));
         }
+
+        $this->parseStaticTotals($xml);
 
         return $invoice;
     }
@@ -886,5 +889,42 @@ class UblReader extends AbstractReader {
         }
 
         return $attachment;
+    }
+
+    private function parseStaticTotals(UXML $xml): InvoiceStaticTotals
+    {
+        $totals = new InvoiceStaticTotals();
+
+        $cac = UblWriter::NS_CAC;
+        $cbc = UblWriter::NS_CBC;
+
+        // BT-113: Paid amount
+        $paidAmountNode = $xml->get("{{$cac}}LegalMonetaryTotal/{{$cbc}}PrepaidAmount");
+        if ($paidAmountNode !== null) {
+            $totals->paidAmount = (float) $paidAmountNode->asText();
+        }
+
+        // BT-114: Rounding amount
+        $roundingAmountNode = $xml->get("{{$cac}}LegalMonetaryTotal/{{$cbc}}PayableRoundingAmount");
+        if ($roundingAmountNode !== null) {
+            $totals->roundingAmount = (float) $roundingAmountNode->asText();
+        }
+
+        $taxExclusiveAmountNode = $xml->get("{{$cac}}LegalMonetaryTotal/{{$cbc}}TaxExclusiveAmount");
+        if ($taxExclusiveAmountNode !== null) {
+            $totals->taxExclusiveAmount = (float) $taxExclusiveAmountNode->asText();
+        }
+
+        $taxInclusiveAmountNode = $xml->get("{{$cac}}LegalMonetaryTotal/{{$cbc}}TaxInclusiveAmount");
+        if ($taxInclusiveAmountNode !== null) {
+            $totals->taxInclusiveAmount = (float) $taxInclusiveAmountNode->asText();
+        }
+
+        $payableAmountNode = $xml->get("{{$cac}}LegalMonetaryTotal/{{$cbc}}PayableAmount");
+        if ($payableAmountNode !== null) {
+            $totals->payableAmount = (float) $payableAmountNode->asText();
+        }
+
+        return $totals;
     }
 }
