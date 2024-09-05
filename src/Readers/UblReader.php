@@ -246,7 +246,7 @@ class UblReader extends AbstractReader {
             $invoice->addLine($this->parseInvoiceLine($node, $taxExemptions));
         }
 
-        $this->parseStaticTotals($xml);
+        $invoice->setStaticTotals($this->parseStaticTotals($xml));
 
         return $invoice;
     }

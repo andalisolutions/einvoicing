@@ -12,8 +12,10 @@ use Einvoicing\Traits\BuyerAccountingReferenceTrait;
 use Einvoicing\Traits\InvoiceValidationTrait;
 use Einvoicing\Traits\PeriodTrait;
 use Einvoicing\Traits\PrecedingInvoiceReferencesTrait;
+use Einvoicing\Writers\UblWriter;
 use InvalidArgumentException;
 use OutOfBoundsException;
+use UXML\UXML;
 use function array_splice;
 use function count;
 use function is_subclass_of;
@@ -265,6 +267,7 @@ class Invoice {
     protected $delivery = null;
     protected $payment = null;
     protected $lines = [];
+    protected $staticTotals;
 
     use AllowanceOrChargeTrait;
     use AttachmentsTrait;
@@ -883,8 +886,6 @@ class Invoice {
         $this->lines = [];
         return $this;
     }
-
-
     /**
      * Get invoice total
      * @return InvoiceTotals Invoice totals
@@ -893,8 +894,13 @@ class Invoice {
         return InvoiceTotals::fromInvoice($this);
     }
 
-    public function getStaticTotal(): InvoiceStaticTotals
+    public function getStaticTotals(): InvoiceStaticTotals
     {
-        return InvoiceStaticTotals::fromInvoice($this);
+        return $this->staticTotals;
+    }
+
+    public function setStaticTotals(InvoiceStaticTotals $parseStaticTotals)
+    {
+        $this->staticTotals = $parseStaticTotals;
     }
 }
